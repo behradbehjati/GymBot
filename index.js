@@ -156,8 +156,8 @@ bot.command('start', (ctx) => {
    
 
 // Handle incoming updates via the webhook
-app.get('/',(req,res)=>{
-    res.send({})
+app.get(URI,(req,res)=>{
+    res.send({text:'fsdfsd'})
 })
 app.post(URI, (req, res) => {
   
