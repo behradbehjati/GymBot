@@ -21,6 +21,7 @@ const cron = require('node-cron');
 // })();
 
 
+app.use(express.json());
 
 
 // Schedule a task to run on a specific date and time (e.g., September 15, 2023, at 2:30 PM)
@@ -40,7 +41,6 @@ const bot = new Telegraf(TOKEN);
 })();
 
 // Middleware to process incoming updates
-app.use(express.json());
 
 // Command handler for /start
 // text="saat harekat bacheha:"
@@ -61,7 +61,7 @@ async function start(ctx) {
     // //    return text
     //  }
     // await times()
-    console.log()
+    console.log('starting')
    
     bot.telegram.sendMessage(ctx.chat.id,text,{
      reply_markup:{
