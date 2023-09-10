@@ -9,8 +9,8 @@ const WEBHOOK_URL=SERVER_URL+URI
 const app=express()
 const { Telegraf } = require('telegraf')
 const { message } = require('telegraf/filters')
-const Redis = require('ioredis');
-const redis = new Redis();
+// const Redis = require('ioredis');
+// const redis = new Redis();
 const cron = require('node-cron');
 //redis configs
 // let redisClient;
@@ -50,15 +50,15 @@ async function start(ctx) {
     // Close the Redis client when done
     let times=async()=>{
    
-        const keys= await redis.keys('*');
-        console.log(keys.length)
+    //     const keys= await redis.keys('*');
+    //     console.log(keys.length)
         
-        for (const key of keys){
-         const value = await redis.get(key);
-             console.log(value);
-        text= await text+key+' '+value+'.\n'
-        }
-       return text
+    //     for (const key of keys){
+    //      const value = await redis.get(key);
+    //          console.log(value);
+    //     text= await text+key+' '+value+'.\n'
+    //     }
+    //    return text
      }
     await times()
     console.log()
@@ -136,7 +136,7 @@ bot.command('start', (ctx) => {
     console.log(userTime)
     ctx.sendMessage({chat_id:ctx.chat.id,text:'ok,shoma saat'+userTime+'miri'})
     ctx.deleteMessage()
-    redis.set(ctx.callbackQuery.from.username,JSON.stringify(userTime))
+    // redis.set(ctx.callbackQuery.from.username,JSON.stringify(userTime))
     start(ctx)
 })
 
@@ -159,7 +159,7 @@ app.post(URI, (req, res) => {
   bot.handleUpdate(req.body, res);
 });
 
-app.listen(5000, () => {
+app.listen(process.env.PORT, () => {
   console.log('Bot is listening on port 5000');
 });
 
