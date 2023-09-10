@@ -6,7 +6,7 @@ const {TOKEN,SERVER_URL}=process.env
 const TELEGRAM_API='https://api.telegram.org/bot'+TOKEN
 const URI='/webhook/'+TOKEN
 const WEBHOOK_URL=SERVER_URL+URI
-const app=express()
+// const app=express()
 const { Telegraf } = require('telegraf')
 const { message } = require('telegraf/filters')
 // const Redis = require('ioredis');
@@ -21,7 +21,7 @@ const cron = require('node-cron');
 // })();
 
 
-app.use(express.json());
+// app.use(express.json());
 
 
 // Schedule a task to run on a specific date and time (e.g., September 15, 2023, at 2:30 PM)
@@ -29,17 +29,17 @@ app.use(express.json());
 
 
 const bot = new Telegraf(TOKEN);
-console.log(bot);
+
 
 // Set up the webhook when the bot starts
-(async () => {
-  try {
-    await bot.telegram.setWebhook(TELEGRAM_API+'/setWebhook?url='+WEBHOOK_URL);
-    console.log('Webhook set up successfully');
-  } catch (error) {
-    console.error('Error setting up webhook:'+ error);
-  }
-})();
+// (async () => {
+//   try {
+//     await bot.telegram.setWebhook(TELEGRAM_API+'/setWebhook?url='+WEBHOOK_URL);
+//     console.log('Webhook set up successfully');
+//   } catch (error) {
+//     console.error('Error setting up webhook:'+ error);
+//   }
+// })();
 
 // Middleware to process incoming updates
 
@@ -81,7 +81,7 @@ bot.command('start', (ctx) => {
     //     start(ctx)
     // });
     
-        
+    console.log('x')
   
 
   start(ctx);
@@ -156,19 +156,35 @@ bot.command('start', (ctx) => {
    
 
 // Handle incoming updates via the webhook
-app.get(URI,(req,res)=>{
-    res.send({text:'fsdfsd'})
-})
-app.post(URI, (req, res) => {
+// app.get(URI,(req,res)=>{
+//     res.send({text:'fsdfsd'})
+// })
+// app.post(URI, (req, res) => {
   
-  bot.handleUpdate(req.body, res);
-  console.log('ok')
-});
+//   bot.handleUpdate(req.body, res);
+//   console.log('ok')
+// });
 
-app.listen(process.env.PORT, () => {
-  console.log('Bot is listening on port 5000');
-});
-
+// app.listen(process.env.PORT, () => {
+//   console.log('Bot is listening on port 5000');
+// });
+bot.launch({
+    webhook: {
+      // Public domain for webhook; e.g.: example.com
+      domain:SERVER_URL ,
+  
+      // Port to listen on; e.g.: 8080
+      port:process.env.PORT ,
+  
+      // Optional path to listen for.
+      // `bot.secretPathComponent()` will be used by default
+      hookPath: URI,
+  
+      // Optional secret to be sent back in a header for security.
+      // e.g.: `crypto.randomBytes(64).toString("hex")`
+      
+    },
+  });
 
 
 
