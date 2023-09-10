@@ -156,6 +156,9 @@ bot.command('start', (ctx) => {
    
 
 // Handle incoming updates via the webhook
+app.get('/',(req,res)=>{
+    res.send({})
+})
 app.post(URI, (req, res) => {
   
   bot.handleUpdate(req.body, res);
