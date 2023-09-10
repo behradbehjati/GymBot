@@ -48,19 +48,19 @@ async function start(ctx) {
     let text="Hello my gymbros \n"
     
     // Close the Redis client when done
-    let times=async()=>{
+    // let times=async()=>{
    
-    //     const keys= await redis.keys('*');
-    //     console.log(keys.length)
+    // //     const keys= await redis.keys('*');
+    // //     console.log(keys.length)
         
-    //     for (const key of keys){
-    //      const value = await redis.get(key);
-    //          console.log(value);
-    //     text= await text+key+' '+value+'.\n'
-    //     }
-    //    return text
-     }
-    await times()
+    // //     for (const key of keys){
+    // //      const value = await redis.get(key);
+    // //          console.log(value);
+    // //     text= await text+key+' '+value+'.\n'
+    // //     }
+    // //    return text
+    //  }
+    // await times()
     console.log()
    
     bot.telegram.sendMessage(ctx.chat.id,text,{
