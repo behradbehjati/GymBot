@@ -75,10 +75,10 @@ async function start(ctx) {
   }
 
 bot.command('start', (ctx) => {
-    cron.schedule('30 6 * * *', () => {
-        redis.flushdb()
-        start(ctx)
-    });
+    // cron.schedule('30 6 * * *', () => {
+    //     redis.flushdb()
+    //     start(ctx)
+    // });
     
         
   
