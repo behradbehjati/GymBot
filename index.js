@@ -29,6 +29,7 @@ app.use(express.json());
 
 
 const bot = new Telegraf(TOKEN);
+console.log('bot is ok');
 
 // Set up the webhook when the bot starts
 (async () => {
