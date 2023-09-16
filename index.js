@@ -1,67 +1,38 @@
 require('dotenv').config()
-const express=require('express')
+
 const bodyParser=require('body-parser')
-const axios =require('axios')
-const {TOKEN,SERVER_URL}=process.env
+
+const {TOKEN,SERVER_URL,REDIS}=process.env
 const TELEGRAM_API='https://api.telegram.org/bot'+TOKEN
 const URI='/webhook/'+TOKEN
 const WEBHOOK_URL=SERVER_URL+URI
-// const app=express()
 const { Telegraf } = require('telegraf')
 const { message } = require('telegraf/filters')
-// const Redis = require('ioredis');
-// const redis = new Redis();
-const cron = require('node-cron');
 //redis configs
-// let redisClient;
-// (async()=>{
-//     redisClient=redis.createClient();
-//     redisClient.on("error",(error)=>console.error('ERROR:'+error))
-//     await redisClient.connect();
-// })();
-
-
-// app.use(express.json());
-
-
-// Schedule a task to run on a specific date and time (e.g., September 15, 2023, at 2:30 PM)
-
-
-
+const Redis = require('ioredis');
+const redis = new Redis(REDIS);
+const cron = require('node-cron');
 const bot = new Telegraf(TOKEN);
-
-
-// Set up the webhook when the bot starts
-// (async () => {
-//   try {
-//     await bot.telegram.setWebhook(TELEGRAM_API+'/setWebhook?url='+WEBHOOK_URL);
-//     console.log('Webhook set up successfully');
-//   } catch (error) {
-//     console.error('Error setting up webhook:'+ error);
-//   }
-// })();
-
 // Middleware to process incoming updates
 
 // Command handler for /start
 // text="saat harekat bacheha:"
 async function start(ctx) {
-    let text="Hello my gymbros \n"
-    
+    let text="LETS GO TO  GYM \n"
     // Close the Redis client when done
-    // let times=async()=>{
+    let times=async()=>{
    
-    // //     const keys= await redis.keys('*');
-    // //     console.log(keys.length)
+        const keys= await redis.hgetall(ctx.chat.id);
+        console.log(typeof(keys))
         
-    // //     for (const key of keys){
-    // //      const value = await redis.get(key);
-    // //          console.log(value);
-    // //     text= await text+key+' '+value+'.\n'
-    // //     }
-    // //    return text
-    //  }
-    // await times()
+        for (const key in keys){
+         const value = await redis.hget(ctx.chat.id,key);
+             console.log(value);
+        text= await text+key+' saat '+value+' mire.\n'
+        }
+       return text
+     }
+    await times()
     console.log('starting')
    
     bot.telegram.sendMessage(ctx.chat.id,text,{
@@ -76,10 +47,11 @@ async function start(ctx) {
   }
 
 bot.command('start', (ctx) => {
-    // cron.schedule('30 6 * * *', () => {
-    //     redis.flushdb()
-    //     start(ctx)
-    // });
+    cron.schedule('30 6 * * *', () => {
+        redis.flushdb()
+        ctx.sendMessage(ctx.chat.id,{text:'روز بخیر بچه ها چه ساعتی میرید باشگاه'})
+        start(ctx)
+    });
     
     console.log('x')
   
@@ -88,7 +60,7 @@ bot.command('start', (ctx) => {
   
   bot.action('start',ctx=>{
     ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id,'انتخاب کن',{
+    bot.telegram.sendMessage(ctx.chat.id,'.ساعت حضورتو انتخاب کن عزیزم',{
     reply_markup:{
         inline_keyboard:[[
             {text:6,callback_data:'6'}
@@ -135,9 +107,8 @@ bot.command('start', (ctx) => {
     
     let userTime=ctx.match[0]
     console.log(userTime)
-    ctx.sendMessage({chat_id:ctx.chat.id,text:'ok,shoma saat'+userTime+'miri'})
     ctx.deleteMessage()
-    // redis.set(ctx.callbackQuery.from.username,JSON.stringify(userTime))
+    redis.hmset(ctx.chat.id,ctx.callbackQuery.from.username,JSON.stringify(userTime))
     start(ctx)
 })
 
