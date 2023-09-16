@@ -17,43 +17,40 @@ const bot = new Telegraf(TOKEN);
 
 // Command handler for /start
 // text="saat harekat bacheha:"
-async function start(ctx) {
-    let text="LETS GO TO  GYM \n"
-    // Close the Redis client when done
-    let times=async()=>{
-   
-        const keys= await redis.hgetall(ctx.chat.id);
-        console.log(typeof(keys))
-        
-        for (const key in keys){
-         const value = await redis.hget(ctx.chat.id,key);
-             console.log(value);
-        text= await text+key+' saat '+value+' mire.\n'
-        }
-       return text
-     }
-    await times()
-    console.log('starting')
-   
-    bot.telegram.sendMessage(ctx.chat.id,text,{
-     reply_markup:{
-        inline_keyboard:[
-            [
-                {text:'انتخاب زمان',callback_data:'start'}
-            ]
-        ]
-    }
-  })
-  }
+
 
 bot.command('start', (ctx) => {
-    cron.schedule('30 6 * * *', () => {
+  async function start(ctx) {
+        let text="LETS GO TO  GYM \n"
+        // Close the Redis client when done
+        let times=async()=>{
+       
+            const keys= await redis.hgetall(ctx.chat.id);
+            
+            for (const key in keys){
+             const value = await redis.hget(ctx.chat.id,key);
+            text= await text+key+' saat '+value+' mire.\n'
+            }
+           return text
+         }
+        await times()
+       
+        bot.telegram.sendMessage(ctx.chat.id,text,{
+         reply_markup:{
+            inline_keyboard:[
+                [
+                    {text:'انتخاب زمان',callback_data:'start'}
+                ]
+            ]
+        }
+      })
+      }
+  cron.schedule('30 6 * * *', () => {
         redis.flushdb()
         ctx.sendMessage(ctx.chat.id,{text:'روز بخیر بچه ها چه ساعتی میرید باشگاه'})
         start(ctx)
     });
     
-    console.log('x')
   
 
   start(ctx);
@@ -106,7 +103,6 @@ bot.command('start', (ctx) => {
     bot.action(timeList,ctx=>{
     
     let userTime=ctx.match[0]
-    console.log(userTime)
     ctx.deleteMessage()
     redis.hmset(ctx.chat.id,ctx.callbackQuery.from.username,JSON.stringify(userTime))
     start(ctx)
