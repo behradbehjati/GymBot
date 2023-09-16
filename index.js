@@ -40,7 +40,7 @@ bot.command('start', (ctx) => {
          reply_markup:{
             inline_keyboard:[
                 [
-                    {text:'انتخاب زمان',callback_data:'start'}
+                    {text:'انتخاب زمان',callback_data:'choose'}
                 ]
             ]
         }
@@ -56,7 +56,7 @@ bot.command('start', (ctx) => {
 
   start(ctx);
   
-  bot.action('start',ctx=>{
+  bot.action('choose',ctx=>{
     ctx.deleteMessage();
     bot.telegram.sendMessage(ctx.chat.id,'.ساعت حضورتو انتخاب کن عزیزم',{
     reply_markup:{
