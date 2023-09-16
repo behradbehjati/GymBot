@@ -23,6 +23,7 @@ bot.command('start', (ctx) => {
   async function start(ctx) {
         let text="LETS GO TO  GYM \n"
         // Close the Redis client when done
+        console.log('ok')
         let times=async()=>{
        
             const keys= await redis.hgetall(ctx.chat.id);
@@ -35,7 +36,7 @@ bot.command('start', (ctx) => {
          }
         await times()
        
-        bot.telegram.sendMessage(ctx.chat.id,text,{
+        await bot.telegram.sendMessage(ctx.chat.id,text,{
          reply_markup:{
             inline_keyboard:[
                 [
