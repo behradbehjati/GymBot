@@ -95,6 +95,8 @@ bot.command('start', (ctx) => {
             {text:20,callback_data:'20'}
         ],[
             {text:21,callback_data:'21'}
+        ],[
+            {text:'cancel',callback_data:'cancel'}
         ],
     ]
     }}
@@ -107,6 +109,13 @@ bot.command('start', (ctx) => {
     ctx.deleteMessage()
     redis.hmset(ctx.chat.id,ctx.callbackQuery.from.username,JSON.stringify(userTime))
     start(ctx)
+})
+    bot.action('cancel',ctx=>{
+    
+     
+     ctx.deleteMessage()
+     
+     start(ctx)
 })
 
     
